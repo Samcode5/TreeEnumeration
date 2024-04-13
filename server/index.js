@@ -3,6 +3,7 @@ const bodyparser=require('body-parser')
 const mongoose=require('mongoose');
 const app= express();
 const cors=require('cors');
+const { spawn } = require("child_process");
 
 app.use(bodyparser.urlencoded({extended:true}))
 app.use(bodyparser.json());
@@ -31,6 +32,16 @@ app.post("/upload",function(req,res){
     })
 
     newImage.save();
+    const pythonScript = spawn("python", ["tree_count.py"]);
+
+    // Listen for data from the script's stdout
+    pythonScript.stdout.on("data", (data) => {
+      console.log(`Python script executed ${data}`);
+    });
+  
+    pythonScript.stderr.on("data", (data) => {
+      console.error(`from Python script ${data}`);
+    });
 })
 
 app.listen(5000,function(error){

@@ -52,7 +52,7 @@ function App()
   }
 
   return (
-    <div>
+    <div className='mainContainer'>
       <div>EcoVision</div>
       <form onSubmit={handleSubmit}>
         <input type="file" accept=".jpeg,.jpg,.png" name="myfile" onChange={handleChange}/>
