@@ -25,6 +25,17 @@ app.get("/",function(req,res){
     res.send("Server working buddy")
 })
 
+app.get("/getimages",async function(req,res){
+    try{
+        await images.find({}).then(data =>{
+            res.send({status:"ok",data:data})
+        })
+    }
+    catch(error){
+          res.send(error)
+    }
+})
+
 app.post("/upload",function(req,res){
     console.log(req.body)
     const newImage= new images({

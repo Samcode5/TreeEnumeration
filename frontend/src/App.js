@@ -1,11 +1,12 @@
 
 import './App.css';
-import {useState} from "react"
+import {useEffect, useState} from "react"
 import React from 'react';
 import axios from 'axios'
 function App()
 {
   const [userData,setUserData]=useState({myfile:""})
+  const [userimage,setUserImage]=useState([])
 
   function convertToBase64(file)
   {
@@ -51,6 +52,24 @@ function App()
 
   }
 
+  async function showImage()
+    {
+  
+        fetch("http://localhost:5000/getimages",{
+          method:"GET",
+        }).then((res)=> res.json().then((data) =>{
+          console.log(data)
+        }))
+        // console.log(response.data.data[0].myfile)
+        // setUserImage(response.data.data[0].myfile)
+  
+    }
+
+  useEffect(() =>{
+    showImage()
+  })
+  
+
   return (
     <div className='mainContainer'>
       <div>EcoVision</div>
@@ -58,6 +77,9 @@ function App()
         <input type="file" accept=".jpeg,.jpg,.png" name="myfile" onChange={handleChange}/>
         <input type='submit' value='Submit' className='button'></input>
       </form>
+      <div>
+        <img height={200} width={200} src={userimage}/>
+      </div>
     </div>
   );
 }
