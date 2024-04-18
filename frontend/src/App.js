@@ -6,7 +6,7 @@ import axios from 'axios'
 function App()
 {
   const [userData,setUserData]=useState({myfile:""})
-  const [userimage,setUserImage]=useState([])
+  const [userImage,setUserImage]=useState([])
 
   function convertToBase64(file)
   {
@@ -55,19 +55,28 @@ function App()
   async function showImage()
     {
   
-        fetch("http://localhost:5000/getimages",{
-          method:"GET",
-        }).then((res)=> res.json().then((data) =>{
-          console.log(data)
-        }))
-        // console.log(response.data.data[0].myfile)
-        // setUserImage(response.data.data[0].myfile)
+      // try {
+      //   const response = await fetch('http://localhost:5000/getimages');
+      //   const data = await response.json();
+      //   console.log(response);
+      //   setUserImage(data[0].myfile);
+      // } catch (error) {
+      //   console.log(error);
+      // }
+      fetch("http://localhost:5000/getimages",{
+        method:"GET",
+      }).then((res)=> res.json().then((data) =>{
+        console.log(data.data.myfile)
+        setUserImage(data.data.myfile)
+      }))
+      // console.log(response.data.data[0].myfile)
+      
   
     }
 
   useEffect(() =>{
     showImage()
-  })
+  },[])
   
 
   return (
@@ -77,9 +86,8 @@ function App()
         <input type="file" accept=".jpeg,.jpg,.png" name="myfile" onChange={handleChange}/>
         <input type='submit' value='Submit' className='button'></input>
       </form>
-      <div>
-        <img height={200} width={200} src={userimage}/>
-      </div>
+      {userImage && <img src={userImage} alt='Uploaded' width={600} height={600} />}
+
     </div>
   );
 }

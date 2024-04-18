@@ -5,8 +5,8 @@ const app= express();
 const cors=require('cors');
 const { spawn } = require("child_process");
 
-app.use(bodyparser.urlencoded({extended:true}))
-app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({limit:'50mb',extended:true}))
+app.use(bodyparser.json({ limit: '50mb' }));
 app.use(cors())
 
 mongoose.connect("mongodb+srv://sameer:sameer@cluster0.ad7klvh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0").then(()=>{
@@ -26,14 +26,21 @@ app.get("/",function(req,res){
 })
 
 app.get("/getimages",async function(req,res){
-    try{
-        await images.find({}).then(data =>{
-            res.send({status:"ok",data:data})
-        })
-    }
-    catch(error){
-          res.send(error)
-    }
+    // try{
+    //     await images.find({}).then(data =>{
+    //         res.send({status:"ok",data:data})
+    //     })
+    // }
+    // catch(error){
+    //       res.send(error)
+    // }
+  
+    try {
+        const latestImage = await images.findOne({}).sort({ _id: -1 });
+        res.send({ status: "ok", data: latestImage });
+      } catch (error) {
+        res.status(500).send(error);
+      }
 })
 
 app.post("/upload",function(req,res){
